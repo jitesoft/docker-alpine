@@ -3,7 +3,7 @@ stages:
   - build
 
 variables:
-  GPG_KEY: GPGKEY
+  GPG_KEY: "0482 D840 22F5 2DF1 C4E7 CD43 293A CD09 07D9 495A"
   ARC: x86_64
   VERSION: 3.9.3
 
@@ -20,7 +20,7 @@ download:
     - curl -OsS "http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
     - curl -OsS "http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
     - curl -OsS "http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc"
-    - gpg --verify alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256
+    - gpg --verify alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARC}.tar.gz
     - grep " alpine-minirootfs-${VERSION}-${ARC}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256 | sha256sum -c -
     - mv alpine-minirootfs-${VERSION}-${ARC}.tar.gz alpine-minirootfs.tar.gz
   artifacts:
