@@ -1,0 +1,45 @@
+stages:
+  - download
+  - build
+
+variables:
+  GPG_KEY: abc
+  ARC: x86_64
+  VERSION: 3.9.3
+
+download:
+  image: alpine:latest
+  stage: download
+  before_script:
+    - apk add --no-cache gnupg curl grep
+    - |
+        gpg --keyserver pgp.mit.edu --recv-keys "${GPG_KEY}" ||
+        gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_KEY}" ||
+        gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}"
+  script:
+    - curl -OsS "http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
+    - curl -OsS "http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
+    - curl -OsS "http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc"
+    - gpg --verify alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256
+    - grep " alpine-minirootfs-${VERSION}-${ARC}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256 | sha256sum -c -
+    - mv alpine-minirootfs-${VERSION}-${ARC}.tar.gz alpine-minirootfs.tar.gz
+  artifacts:
+    paths:
+      - alpine-minirootfs.tar.gz
+    expire_in: 1 days
+
+build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
+    - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
+  script:
+    - docker build -t ${CI_REGISTRY_IMAGE}:latest  --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
+    - docker tag ${CI_REGISTRY_IMAGE}:latest ${CI_REGISTRY_IMAGE}:${VERSION}
+    - docker push ${CI_REGISTRY_IMAGE}:latest
+    - docker push ${CI_REGISTRY_IMAGE}:${VERSION}
+    - TAGS="${VERSION} ${VERSION:0:3} latest"
+    - for tag in ${TAGS}; do docker tag ${CI_REGISTRY_IMAGE}:${VERSION} jitesoft/alpine:${tag}; docker push jitesoft/alpine:${tag}; done
