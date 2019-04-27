@@ -3,7 +3,7 @@ stages:
   - build
 
 variables:
-  GPG_KEY: abc
+  GPG_KEY: GPGKEY
   ARC: x86_64
   VERSION: 3.9.3
 
@@ -31,6 +31,8 @@ download:
 build:
   stage: build
   image: docker:latest
+  dependencies:
+    - download
   services:
     - docker:dind
   before_script:
