@@ -6,4 +6,5 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       arch="${ARC}"
 
 ADD alpine-minirootfs.tar.gz /
+RUN printf "https://ftp.acc.umu.se/mirror/alpinelinux.org/v3.9/main\nhttps://ftp.acc.umu.se/mirror/alpinelinux.org/v3.9/community" > /etc/apk/repositories
 CMD ["/bin/sh"]

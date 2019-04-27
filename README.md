@@ -7,4 +7,6 @@ It's a very small linux distro making it very suitable for containers.
 
 Well, this image is pretty much identical to the official dockerhub image for alpine linux, but after recent
 issues with docker hub, we decided it would be a good idea to have a image on gitlab too which we can derive from 
-for our other images.
+for our other images.  
+
+We have also changed the package repository to use a https mirror (https://ftp.acc.umu.se).
