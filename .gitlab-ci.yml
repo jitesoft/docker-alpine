@@ -39,7 +39,7 @@ build:
     - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
-    - docker build -t ${CI_REGISTRY_IMAGE}:latest  --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
+    - docker build --label "alpine.version=${VERSION}" -t ${CI_REGISTRY_IMAGE}:latest --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
     - docker tag ${CI_REGISTRY_IMAGE}:latest ${CI_REGISTRY_IMAGE}:${VERSION}
     - docker push ${CI_REGISTRY_IMAGE}:latest
     - docker push ${CI_REGISTRY_IMAGE}:${VERSION}
