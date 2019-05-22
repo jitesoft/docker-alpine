@@ -2,7 +2,10 @@ FROM scratch
 ARG VERSION="x.x.x"
 ARG ARC="x86_64"
 LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
-      version="${VERSION}" \
+      maintainer.org="Jitesoft - https://jitesoft.com" \
+      maintainer.repo="https://gitlab.com/jitesoft/dockerfiles/alpine" \
+      maintainer.issues="https://gitlab.com/jitesoft/dockerfiles/alpine/issues" \
+      alpine.version="${VERSION}" \
       arch="${ARC}"
 
 ADD alpine-minirootfs.tar.gz /
