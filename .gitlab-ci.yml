@@ -6,6 +6,7 @@ variables:
   GPG_KEY: "0482 D840 22F5 2DF1 C4E7 CD43 293A CD09 07D9 495A"
   ARC: x86_64
   VERSION: 3.9.4
+  EXTRA_TAGS: 'latest'
 
 download:
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
@@ -43,5 +44,7 @@ build:
     - docker tag ${CI_REGISTRY_IMAGE}:latest ${CI_REGISTRY_IMAGE}:${VERSION}
     - docker push ${CI_REGISTRY_IMAGE}:latest
     - docker push ${CI_REGISTRY_IMAGE}:${VERSION}
-    - TAGS="${VERSION} ${VERSION:0:3} latest"
+    - TAGS="${VERSION} ${VERSION:0:3} ${EXTRA_TAGS}"
     - for tag in ${TAGS}; do docker tag ${CI_REGISTRY_IMAGE}:${VERSION} jitesoft/alpine:${tag}; docker push jitesoft/alpine:${tag}; done
+  tags:
+    - jitesoft
