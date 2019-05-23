@@ -40,11 +40,14 @@ build:
     - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
-    - docker build --label "alpine.version=${VERSION}" -t ${CI_REGISTRY_IMAGE}:latest --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
-    - docker tag ${CI_REGISTRY_IMAGE}:latest ${CI_REGISTRY_IMAGE}:${VERSION}
-    - docker push ${CI_REGISTRY_IMAGE}:latest
-    - docker push ${CI_REGISTRY_IMAGE}:${VERSION}
+    - docker build --label "alpine.version=${VERSION}" -t ${CI_REGISTRY_IMAGE}:${VERSION} --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
     - TAGS="${VERSION} ${VERSION:0:3} ${EXTRA_TAGS}"
-    - for tag in ${TAGS}; do docker tag ${CI_REGISTRY_IMAGE}:${VERSION} jitesoft/alpine:${tag}; docker push jitesoft/alpine:${tag}; done
+    - |
+      for tag in ${TAGS}; do
+        docker tag ${CI_REGISTRY_IMAGE}${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} jitesoft/alpine:${tag}
+        docker push jitesoft/alpine:${tag}
+        docker push ${CI_REGISTRY_IMAGE}:${tag}
+      done
   tags:
     - jitesoft
