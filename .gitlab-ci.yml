@@ -1,6 +1,7 @@
 stages:
   - download
   - build
+  - next
 
 variables:
   GPG_KEY: "0482 D840 22F5 2DF1 C4E7 CD43 293A CD09 07D9 495A"
@@ -49,5 +50,7 @@ build:
         docker push jitesoft/alpine:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
       done
+    - docker build -t ${IMAGE}/buildbase:${latest} -f buildbase.dockerfile .
+    - docker push ${IMAGE}:latest
   tags:
     - jitesoft
