@@ -42,15 +42,16 @@ build:
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
     - docker build --label "alpine.version=${VERSION}" -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
+    - docker build -t ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} -f buildbase.dockerfile .
     - TAGS="${VERSION} ${EXTRA_TAGS}"
     - |
       for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}:${tag}
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} jitesoft/alpine:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}/buildbase:${tag}
         docker push jitesoft/alpine:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
+        docker push ${CI_REGISTRY_IMAGE}/buildbase:${tag}
       done
-    - docker build -t ${IMAGE}/buildbase:${latest} -f buildbase.dockerfile .
-    - docker push ${IMAGE}:latest
   tags:
     - jitesoft
