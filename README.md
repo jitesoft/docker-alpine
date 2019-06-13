@@ -24,3 +24,7 @@ There is also a image uploaded to docker hub for those who wish to use it from t
 ```bash
 docker pull jitesoft/alpine:latest
 ```
+
+### Image labels
+
+This image follows the [Jitesoft image label specification 1.0.0](https://gitlab.com/snippets/1866155).
