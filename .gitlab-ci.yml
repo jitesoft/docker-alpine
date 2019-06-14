@@ -1,7 +1,10 @@
+include:
+  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan.yml
+
 stages:
   - download
   - build
-  - next
+  - scan
 
 variables:
   GPG_KEY: "0482 D840 22F5 2DF1 C4E7 CD43 293A CD09 07D9 495A"
@@ -41,7 +44,7 @@ build:
     - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
-    - docker build --label "alpine.version=${VERSION}" -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
+    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
     - docker build -t ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} -f buildbase.dockerfile .
     - TAGS="${VERSION} ${EXTRA_TAGS}"
     - |
@@ -55,3 +58,6 @@ build:
       done
   tags:
     - jitesoft
+
+scan:
+  <<: *container_scanning
