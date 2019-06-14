@@ -60,4 +60,4 @@ build:
     - jitesoft
 
 scan:
-  <<: *container_scanning
+  extends: .container_scanning
