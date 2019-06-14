@@ -11,6 +11,7 @@ variables:
   ARC: x86_64
   VERSION: 3.9.4
   EXTRA_TAGS: 'latest 3.9'
+  SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:latest"
 
 download:
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
