@@ -9,8 +9,8 @@ stages:
 variables:
   GPG_KEY: "0482 D840 22F5 2DF1 C4E7 CD43 293A CD09 07D9 495A"
   ARC: x86_64
-  VERSION: 3.9.4
-  EXTRA_TAGS: 'latest 3.9'
+  VERSION: 3.10.0
+  EXTRA_TAGS: 'latest 3.10'
   DOCKER_BUILDKIT: 1
 
 download:
