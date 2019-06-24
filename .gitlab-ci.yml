@@ -9,8 +9,8 @@ stages:
 variables:
   GPG_KEY: "0482 D840 22F5 2DF1 C4E7 CD43 293A CD09 07D9 495A"
   ARC: x86_64
-  VERSION: 3.9.4
-  EXTRA_TAGS: 'latest 3.9'
+  VERSION: 3.10.0
+  EXTRA_TAGS: 'latest 3.10'
   DOCKER_BUILDKIT: 1
 
 download:
@@ -23,9 +23,10 @@ download:
         gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_KEY}" ||
         gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}"
   script:
-    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/latest-stable/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
-    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/latest-stable/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
-    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/latest-stable/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc"
+    - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
+    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
+    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
+    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc"
     - gpg --verify alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARC}.tar.gz
     - grep " alpine-minirootfs-${VERSION}-${ARC}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256 | sha256sum -c -
     - mv alpine-minirootfs-${VERSION}-${ARC}.tar.gz alpine-minirootfs.tar.gz
@@ -59,20 +60,3 @@ build:
       done
   tags:
     - jitesoft
-
-scan:
-  image: jitesoft/paclair
-  stage: scan
-  variables:
-    SCANNING_CLAIR_CONFIG: https://gist.githubusercontent.com/Johannestegner/556ed344d6fa5314fac0f0e68ea4c822/raw/847f41128eb936abcd9b5faf135f52d495cbdecc/ClairConfig.yml
-  before_script:
-    - apk add --no-cache gettext curl
-    - curl -sSL ${SCANNING_CLAIR_CONFIG} | envsubst > config.yml
-  script:
-    - paclair --conf=config.yml Docker "${CI_REGISTRY_IMAGE}:latest" push
-    - paclair --conf=config.yml Docker "${CI_REGISTRY_IMAGE}:latest" analyse --output-report=term 2>&1 | tee test.json gl-container-scanning-report.json
-    - paclair --conf=config.yml Docker "${CI_REGISTRY_IMAGE}:latest" delete
-  allow_failure: true
-  artifacts:
-    reports:
-      container_scanning: gl-container-scanning-report.json
