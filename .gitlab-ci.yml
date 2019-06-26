@@ -24,6 +24,7 @@ download:
         gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}"
   script:
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
+    - echo ${VERSION_SHORT}
     - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
     - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
     - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc"
