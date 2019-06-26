@@ -46,7 +46,8 @@ build:
     - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
-    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
+    - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
+    - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
     - docker build -t ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} -f buildbase.dockerfile .
     - TAGS="${VERSION} ${EXTRA_TAGS}"
     - |

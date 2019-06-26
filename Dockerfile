@@ -1,6 +1,7 @@
 FROM scratch
 ARG VERSION="x.x.x"
 ARG ARC="x86_64"
+ARG VERSION_SHORT="x.x"
 LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       maintainer.org="Jitesoft" \
       maintainer.org.uri="https://jitesoft.com" \
@@ -12,5 +13,5 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.build.arch="${ARC}"
 
 ADD alpine-minirootfs.tar.gz /
-RUN printf "https://ftp.acc.umu.se/mirror/alpinelinux.org/v3.9/main\nhttps://ftp.acc.umu.se/mirror/alpinelinux.org/v3.9/community" > /etc/apk/repositories
+RUN printf "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main\nhttps://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/community" > /etc/apk/repositories
 CMD ["/bin/ash"]
