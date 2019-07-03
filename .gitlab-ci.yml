@@ -62,3 +62,11 @@ build:
       done
   tags:
     - jitesoft
+
+
+
+scan:7.3:cli:
+  stage: scan
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:latest"
