@@ -23,6 +23,7 @@ download:
         gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_KEY}" ||
         gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}"
   script:
+    - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
     - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
     - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
@@ -47,6 +48,7 @@ build:
     - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
+    - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
     - docker build -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
     - docker build -t ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} -f buildbase.dockerfile .
