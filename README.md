@@ -3,27 +3,22 @@
 This image contains the linux distro [Alpine](https://www.alpinelinux.org/).  
 It's a very small linux distro making it very suitable for containers.
 
-## Why this image?
+This image is used as a base image for most of the [Jitesoft](https://jitesoft.com) docker images.
 
-Well, this image is pretty much identical to the official dockerhub image for alpine linux, but after recent
-issues with docker hub, we decided it would be a good idea to have an image on gitlab too which we can derive from 
-for our other alpine based images.  
+## Tags
 
-We have also changed the package repository to use a https mirror (https://ftp.acc.umu.se).  
+Tags follows the releases of alpine, they are automatically built via GitLab CI, `latest` is the most recent version.
 
-## Use the image
+### Docker Hub
 
-If you wish to use the image directly from gitlab you can pull it via the following uri:
+* `latest`, `3.10`
 
-```bash
-docker pull registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
-```
+### GitLab
 
-There is also a image uploaded to docker hub for those who wish to use it from there:
+* `registry.gitlab.com/jitesoft/dockerfiles/alpine`
+  * `latest`, `3.10`
 
-```bash
-docker pull jitesoft/alpine:latest
-```
+Dockerfile and scripts can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/alpine) or [GitHub](https://github.com/jitesoft/docker-alpine).
 
 ### Image labels
 
