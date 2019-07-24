@@ -11,7 +11,7 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.project.registry.uri="registry.gitlab.com/jitesoft/dockerfiles/alpine" \
       com.jitesoft.app.alpine.version="${VERSION}" \
       com.jitesoft.build.arch="${ARC}"
-ENV LANG="C.UTF-8" \
+ENV LANG="C.UTF-8"
 
 
 ADD alpine-minirootfs.tar.gz /
