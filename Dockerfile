@@ -11,7 +11,14 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.project.registry.uri="registry.gitlab.com/jitesoft/dockerfiles/alpine" \
       com.jitesoft.app.alpine.version="${VERSION}" \
       com.jitesoft.build.arch="${ARC}"
+ENV LANG="C.UTF-8" \
+
 
 ADD alpine-minirootfs.tar.gz /
-RUN printf "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main\nhttps://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/community" > /etc/apk/repositories
+RUN printf "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main\nhttps://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/community" > /etc/apk/repositories \
+ && apk add --no-cache --virtual .init-deps tzdata \
+ && cp /usr/share/zoneinfo/UTC /etc/localtime \
+ && echo "UTC" > /etc/timezone \
+ && apk del .init-deps
+
 CMD ["/bin/ash"]
