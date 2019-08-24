@@ -18,6 +18,7 @@ download:
   stage: download
   before_script:
     - apk add --no-cache gnupg curl grep
+    - chmod +x target.sh
     - |
         gpg --keyserver pgp.mit.edu --recv-keys "${GPG_KEY}" ||
         gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_KEY}" ||
