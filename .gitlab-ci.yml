@@ -9,6 +9,7 @@ stages:
 variables:
   GPG_KEY: "0482D84022F52DF1C4E7CD43293ACD0907D9495A"
   VERSION: 3.10.2
+  TARGET_PLATFORMS: "aarch64 x86_64 armv7"
   EXTRA_TAGS: 'latest 3.10'
   DOCKER_BUILDKIT: 1
 
@@ -24,15 +25,20 @@ download:
   script:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
-    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
-    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
-    - curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc"
-    - gpg --verify alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARC}.tar.gz
-    - grep " alpine-minirootfs-${VERSION}-${ARC}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256 | sha256sum -c -
-    - mv alpine-minirootfs-${VERSION}-${ARC}.tar.gz alpine-minirootfs.tar.gz
+    - |
+      for ARCH in "${TARGET_PLATFORMS}"; do
+          BUILDX_ARCH=$(./target.sh ${ARCH})
+          mkdir -p alpine/${BUILDX_ARCH}
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc"
+          gpg --verify alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARC}.tar.gz
+          grep " alpine-minirootfs-${VERSION}-${ARC}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256 | sha256sum -c -
+          mv alpine-minirootfs-${VERSION}-${ARC}.tar.gz alpine/${BUIDX_ARCH}/alpine-minirootfs.tar.gz
+      done;
   artifacts:
     paths:
-      - alpine-minirootfs.tar.gz
+      - alpine/
     expire_in: 1 days
 
 build:
