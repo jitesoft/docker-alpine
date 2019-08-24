@@ -8,8 +8,7 @@ stages:
 
 variables:
   GPG_KEY: "0482D84022F52DF1C4E7CD43293ACD0907D9495A"
-  ARC: x86_64
-  VERSION: 3.10.1
+  VERSION: 3.10.2
   EXTRA_TAGS: 'latest 3.10'
   DOCKER_BUILDKIT: 1
 
@@ -50,8 +49,8 @@ build:
   script:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
-    - docker buildx build --platformlinux/amd64,linux/arm64,linux/arm/v7 -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} --build-arg ARC=${ARC} .
-    - docker buildx build --platformlinux/amd64,linux/arm64,linux/arm/v7 -t ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} -f buildbase.dockerfile .
+    - docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v8,windows -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
+    - docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v8,windows -t ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} -f buildbase.dockerfile .
     - TAGS="${VERSION} ${EXTRA_TAGS}"
     - |
       for tag in ${TAGS}; do
