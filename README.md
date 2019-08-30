@@ -3,7 +3,12 @@
 This image contains the linux distro [Alpine](https://www.alpinelinux.org/).  
 It's a very small linux distro making it very suitable for containers.
 
-This image is used as a base image for most of the [Jitesoft](https://jitesoft.com) docker images.
+This image is used as a base image for most of the [Jitesoft](https://jitesoft.com) docker images.  
+
+It's important to be aware that this image have no `none-root` user created, running containers with a root
+user could be a security issue. So if you derive from this image, creating a new user to run the services
+in the container is a good idea.
+
 
 ## Tags
 
@@ -16,6 +21,11 @@ Tags follows the releases of alpine, they are automatically built via GitLab CI,
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/alpine`
+  * `latest`, `3.10`
+  
+### Quay.io
+
+* `quay.io/jitesoft/alpine`
   * `latest`, `3.10`
 
 Dockerfile and scripts can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/alpine) or [GitHub](https://github.com/jitesoft/docker-alpine).
