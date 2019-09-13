@@ -53,12 +53,12 @@ build:
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}:${tag}
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} quay.io/jitesoft/alpine:${tag}
         docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} docker.pkg.github.com/jitesoft/d/alpine:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} docker.pkg.github.com/docker-alpine:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} docker.pkg.github.com/jitesoft/docker-alpine:${tag}
         docker push jitesoft/alpine:${tag}
         docker push quay.io/jitesoft/alpine:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
         docker push docker.pkg.github.com/jitesoft/d/alpine:${tag}
-        docker push docker.pkg.github.com/docker-alpine:${tag}
+        docker push docker.pkg.github.com/jitesoft/docker-alpine:${tag}
       done
     - docker build -t ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} -f buildbase.dockerfile .
     - |
