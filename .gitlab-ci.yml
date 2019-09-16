@@ -54,28 +54,32 @@ verify:
   script:
     - echo "${GPG_KEY}" > gpgkeys.txt
     - |
-      if [ ! -f "keys.out" ]; then
-          for key in $(cat gpgkeys.txt); do
-            gpg --keyserver pgp.mit.edu --recv-keys "${key}" ||
-            gpg --keyserver keyserver.pgp.com --recv-keys "${key}" ||
-            gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}"
-            gpg --export > keys.out
+      if [ ! -f "keys.out" ];
+      then
+          for key in $(cat gpgkeys.txt);
+          do
+              gpg --keyserver pgp.mit.edu --recv-keys "${key}" ||
+              gpg --keyserver keyserver.pgp.com --recv-keys "${key}" ||
+              gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}"
+              gpg --export > keys.out
           done
-      elif [ "$(cat keysum.txt | md5sum -c)" ]; then
+      elif [ "$(cat keysum.txt | md5sum -c)" ];
+      then
           echo "Keys are imported."
       fi
     - md5sum gpgkeys.txt | tee keysum.txt
     - |
-      for ARCH in ${ARCHITECTURES}; do
-        cd files/${ARCH}
-        gpg --verify alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARCH}.tar.gz
-        grep " alpine-minirootfs-${VERSION}-${ARCH}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256 | sha256sum -c -
-        cd ../..
-        DOCKER_ARCH=$(./helper arch "${ARCH}")
-        echo "Creating directory for ${DOCKER_ARCH}"
-        mkdir -p "files/${DOCKER_ARCH}"
-        mv files/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz "files/${DOCKER_ARCH}/$alpine-minirootfs.tar.gz"
-        rm -rf files/${ARCH}
+      for ARCH in ${ARCHITECTURES};
+      do
+          cd files/${ARCH}
+          gpg --verify alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARCH}.tar.gz
+          grep " alpine-minirootfs-${VERSION}-${ARCH}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256 | sha256sum -c -
+          cd ../..
+          DOCKER_ARCH=$(./helper arch "${ARCH}")
+          echo "Creating directory for ${DOCKER_ARCH}"
+          mkdir -p "files/${DOCKER_ARCH}"
+          mv files/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz "files/${DOCKER_ARCH}/$alpine-minirootfs.tar.gz"
+          rm -rf files/${ARCH}
       done
   cache:
     key: alpine.gpg.keyring
