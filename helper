@@ -27,5 +27,5 @@ function make_tags () {
 if [ "$1" = "arch" ]; then
   get_arch "$2"
 else
-  make_tags "$2" "$3"
+  make_tags "$1" "$2"
 fi
