@@ -45,26 +45,11 @@ build:
   script:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
-    - docker buildx build --platform linux/arm,linux/arm64,linux/amd64  --push -t ${CI_REGISTRY_IMAGE}:test --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
+    - docker buildx build --platform linux/arm,linux/arm64,linux/amd64  --output type=image -t ${CI_REGISTRY_IMAGE}:test --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
     - TAGS="${VERSION} latest ${VERSION_SHORT}"
-    - docker tag ${CI_REGISTRY_IMAGE}:test jitesoft/alpine:test
+    - docker image tag ${CI_REGISTRY_IMAGE}:test jitesoft/alpine:test
     - docker push jitesoft/alpine:test
-    - |
-      #for tag in ${TAGS}; do
-        #docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} jitesoft/alpine:${tag}
-        #docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}:${tag}
-        #docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} quay.io/jitesoft/alpine:${tag}
-        #docker push jitesoft/alpine:${tag}
-        #docker push quay.io/jitesoft/alpine:${tag}
-        #docker push ${CI_REGISTRY_IMAGE}:${tag}
-      #done
-    - docker build -t ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} -f buildbase.dockerfile .
-    - |
-      for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}/buildbase:${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}/buildbase:${tag}
-        docker push ${CI_REGISTRY_IMAGE}/buildbase:${tag}
-      done
-  tags:
+    tags:
     - jitesoft
     - buildx
 
