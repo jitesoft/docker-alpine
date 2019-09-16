@@ -49,9 +49,10 @@ build:
     - TAG_STRING=""
     - |
       for tag in ${TAGS}; do
-        TAG_STRING+="-t ${CI_REGISTRY_IMAGE}:${tag} -t jitesoft/alpine:${tag} -t quay.io/jitesoft/alpine:${tag} "
+        TAG_STRING="${TAG_STRING} -t ${CI_REGISTRY_IMAGE}:${tag} -t jitesoft/alpine:${tag} -t quay.io/jitesoft/alpine:${tag}"
       done
     - docker buildx build --platform linux/arm,linux/arm64,linux/amd64 --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
+    - docker buildx build --platform linux/arm,linux/arm64,linux/amd64 --push -t ${CI_REGISTRY_IMAGE}/buildbase:latest -f buildbase.dockerfile .
   tags:
     - jitesoft
     - buildx
