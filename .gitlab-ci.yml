@@ -17,22 +17,26 @@ download:
     - apk add --no-cache grep wget curl
   script:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
-    - if [ ! -f "version.txt" ]
-        echo "${VERSION}" >> version.txt
-      elif [ "$(cat version.txt)" != "${VERSION}" ]
-        VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
-        mkdir -p files
-        rm -rf files/*
-        cd files
-        for ARCH in ${ARCHITECTURES}; do
-          mkdir -p ${ARCH}
-          cd ${ARCH}
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz"
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256"
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc"
+    - |
+      if [ ! -f "version.txt" ];
+      then
+          echo "${VERSION}" >> version.txt
+      elif [ "$(cat version.txt)" != "${VERSION}" ];
+      then
+          VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
+          mkdir -p files
+          rm -rf files/*
+          cd files
+          for ARCH in ${ARCHITECTURES};
+          do
+              mkdir -p ${ARCH}
+              cd ${ARCH}
+              curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz"
+              curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256"
+              curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc"
+             cd ..
+          done
           cd ..
-        done
-        cd ..
       fi
   cache:
     key: alpine.downloads
