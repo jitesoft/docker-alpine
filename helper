@@ -1,6 +1,6 @@
 #!/bin/ash
 
-if [ "$1" = "arch" ]; then
+function get_arch () {
   case "$1" in
       x86_64)
           echo "linux/amd64"
@@ -12,12 +12,20 @@ if [ "$1" = "arch" ]; then
           echo "linux/arm/v7"
           exit;;
   esac
-fi
+}
 
-IMGS=$(echo "$1" | awk 'BEGIN{RS=","} {print}')
-TAGS=$(echo "$2" | awk 'BEGIN{RS=","} {print}')
-for tag in ${TAGS}; do
-  for img in ${IMGS}; do
-    echo -n "-t ${img}:${tag} "
+function make_tags () {
+  IMGS=$(echo "$1" | awk 'BEGIN{RS=","} {print}')
+  TAGS=$(echo "$2" | awk 'BEGIN{RS=","} {print}')
+  for tag in ${TAGS}; do
+    for img in ${IMGS}; do
+      echo -n "-t ${img}:${tag} "
+    done
   done
-done
+}
+
+if [ "$1" = "arch" ]; then
+  get_arch "$2"
+else
+  make_tags "$2" "$3"
+fi

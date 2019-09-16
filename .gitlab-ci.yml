@@ -50,15 +50,9 @@ verify:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - chmod +x helper
   script:
-    - |
-      for key in $(cat gpgkeys.txt);
-      do
-          gpg --keyserver pgp.mit.edu --recv-keys "${key}" ||
-          gpg --keyserver keyserver.pgp.com --recv-keys "${key}" ||
-          gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}"
-          gpg --export > keys.out
-      done
-    - md5sum gpgkeys.txt | tee keysum.txt
+    - gpg import keys.out
+    - gpg --list-keys ${GPG_KEY} || gpg --keyserver pgp.mit.edu --recv-keys "${key}" || gpg --keyserver keyserver.pgp.com --recv-keys "${key}" || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}"
+    - gpg --export > keys.out
     - |
       for ARCH in ${ARCHITECTURES};
       do
@@ -76,7 +70,6 @@ verify:
     key: alpine.gpg.keyring
     paths:
       - keys.out
-      - keysum.txt
   artifacts:
     paths:
       - files/*
