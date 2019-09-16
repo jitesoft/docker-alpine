@@ -1,7 +1,7 @@
 FROM scratch
-ARG VERSION="x.x.x"
-ARG ARC="x86_64"
-ARG VERSION_SHORT="x.x"
+ARG VERSION
+ARG TARGETPLATFORM
+ARG VERSION_SHORT
 LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       maintainer.org="Jitesoft" \
       maintainer.org.uri="https://jitesoft.com" \
@@ -9,7 +9,8 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.project.repo.uri="https://gitlab.com/jitesoft/dockerfiles/alpine" \
       com.jitesoft.project.repo.issues="https://gitlab.com/jitesoft/dockerfiles/alpine/issues" \
       com.jitesoft.project.registry.uri="registry.gitlab.com/jitesoft/dockerfiles/alpine" \
-      com.jitesoft.app.alpine.version="${VERSION}"
+      com.jitesoft.app.alpine.version="${VERSION}" \
+      com.jitesoft.app.alpine.arch="${TARGETPLATFORM}"
 ENV LANG="C.UTF-8"
 
 
