@@ -79,7 +79,7 @@ build:
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
   dependencies:
-    - download
+    - verify
   before_script:
     - apk add --no-cache grep wget
     - chmod +x helper
