@@ -17,32 +17,25 @@ download:
     - apk add --no-cache grep wget curl
   script:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
+    - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
+    - mkdir -p files
+    - rm -rf files/*
+    - cd files
     - |
-      if [ ! -f "version.txt" ];
-      then
-          echo "${VERSION}" >> version.txt
-      elif [ "$(cat version.txt)" != "${VERSION}" ];
-      then
-          VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
-          mkdir -p files
-          rm -rf files/*
-          cd files
-          for ARCH in ${ARCHITECTURES};
-          do
-              mkdir -p ${ARCH}
-              cd ${ARCH}
-              curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz"
-              curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256"
-              curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc"
-             cd ..
-          done
-          cd ..
-      fi
+      for ARCH in ${ARCHITECTURES};
+      do
+          mkdir -p ${ARCH}
+          cd ${ARCH}
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz"
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256"
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc"
+         cd ..
+      done
+      cd ..
   cache:
     key: alpine.downloads
     paths:
-      - files/
-      - version.txt
+      - files/*
 
 verify:
   stage: verify
@@ -82,7 +75,7 @@ verify:
           DOCKER_ARCH=$(./helper arch "${ARCH}")
           echo "Creating directory for ${DOCKER_ARCH}"
           mkdir -p "files/${DOCKER_ARCH}"
-          mv files/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz "files/${DOCKER_ARCH}/$alpine-minirootfs.tar.gz"
+          mv files/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz "files/${DOCKER_ARCH}/alpine-minirootfs.tar.gz"
           rm -rf files/${ARCH}
       done
   cache:
@@ -93,7 +86,7 @@ verify:
   artifacts:
     paths:
       - keys.out
-      - files/
+      - files/*
     expire_in: 1 day
 
 build:
