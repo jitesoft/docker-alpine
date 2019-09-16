@@ -35,7 +35,7 @@ download:
 
 build:
   stage: build
-  image: docker:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker:latest
   variables:
     DOCKER_BUILDKIT: 1
   dependencies:
