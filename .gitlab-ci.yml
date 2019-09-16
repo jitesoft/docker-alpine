@@ -49,7 +49,7 @@ build:
     - TAGS="${VERSION} latest ${VERSION_SHORT}"
     - docker image tag ${CI_REGISTRY_IMAGE}:test jitesoft/alpine:test
     - docker push jitesoft/alpine:test
-    tags:
+  tags:
     - jitesoft
     - buildx
 
