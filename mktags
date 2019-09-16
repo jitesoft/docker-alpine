@@ -1,0 +1,11 @@
+#!/bin/ash
+function generate () {
+  IMGS=$(echo $1 | awk 'BEGIN{RS=","} {print}')
+  TAGS=$(echo $2 | awk 'BEGIN{RS="," {print}}'
+  for tag in ${TAGS}; do
+    for img in ${IMGS}; do
+      echo -n "-t ${img}:${tag} "
+    done
+  done
+}
+generate $1 $2 | sort | uniq
