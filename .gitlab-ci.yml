@@ -8,7 +8,7 @@ stages:
   - scan
 
 variables:
-  ARCHITECTURES: ""
+  ARCHITECTURES: "x86_64 armv7 aarch64"
 
 download:
   stage: download
@@ -27,9 +27,9 @@ download:
         for ARCH in ${ARCHITECTURES}; do
           mkdir -p ${ARCH}
           cd ${ARCH}
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz"
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256"
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARC}/alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc"
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz"
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256"
+          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc"
           cd ..
         done
         cd ..
@@ -60,7 +60,7 @@ verify:
             gpg --keyserver keyserver.pgp.com --recv-keys "${key}" ||
             gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}"
             gpg --export > keys.out
-        done
+          done
       elif [ "$(cat keysum.txt | md5sum -c)" ]; then
           echo "Keys are imported."
       fi
@@ -68,8 +68,8 @@ verify:
     - |
       for ARCH in ${ARCHITECTURES}; do
         cd files/${ARCH}
-        gpg --verify alpine-minirootfs-${VERSION}-${ARC}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARC}.tar.gz
-        grep " alpine-minirootfs-${VERSION}-${ARC}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARC}.tar.gz.sha256 | sha256sum -c -
+        gpg --verify alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARCH}.tar.gz
+        grep " alpine-minirootfs-${VERSION}-${ARCH}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256 | sha256sum -c -
         cd ../..
         DOCKER_ARCH=$(./helper arch "${ARCH}")
         echo "Creating directory for ${DOCKER_ARCH}"
