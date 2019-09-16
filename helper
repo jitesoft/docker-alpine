@@ -1,0 +1,23 @@
+#!/bin/ash
+
+if [ "$1" = "arch" ]; then
+  case "$1" in
+      x86_64)
+          echo "linux/amd64"
+          exit;;
+      aarch64)
+          echo "linux/arm64"
+          exit;;
+       armv7)
+          echo "linux/arm/v7"
+          exit;;
+  esac
+fi
+
+IMGS=$(echo "$1" | awk 'BEGIN{RS=","} {print}')
+TAGS=$(echo "$2" | awk 'BEGIN{RS=","} {print}')
+for tag in ${TAGS}; do
+  for img in ${IMGS}; do
+    echo -n "-t ${img}:${tag} "
+  done
+done
