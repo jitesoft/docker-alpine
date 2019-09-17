@@ -90,7 +90,6 @@ build:
     - ARCH_LIST=$(./helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
     - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
-    - docker buildx build --platform ${ARCH_LIST} --progress plain --push -t ${CI_REGISTRY_IMAGE}/buildbase:latest -f buildbase.dockerfile .
   tags:
     - jitesoft
     - buildx

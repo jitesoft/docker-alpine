@@ -1,6 +1,18 @@
 #!/bin/ash
 
-function get_arch () {
+# This file contains a few different helper methods
+# for building multi-arch images with docker buildx.
+# Most of the methods is to convert tags and architectures, but it
+# might be updated to contain more later on.
+
+#
+# Convert a "standard" architecture name into the format that buildx
+# is expecting.
+#
+# arguments:
+# $1 - String - Architecture name in "standard" format (e.g., x86_64, aarch64 etc).
+#
+function convert_arch () {
   case "$1" in
       x86_64)
           echo "linux/amd64"
@@ -23,12 +35,27 @@ function get_arch () {
   esac
 }
 
+#
+# Takes multiple architecture in "standard" format and echos them
+# in the docker buildx expected format as a , seperated string.
+#
+# arguments:
+# $@: - String[] - Architecture names as strings.
+#
 function arch_list () {
   for arc in "$@"; do
-    echo -n "$(get_arch "${arc}"),"
+    echo -n "$(convert_arch "${arc}"),"
   done
 }
 
+#
+# Takes a set of image names and tag names as comma seperated strings
+# and converts it into a list of `-t <img_name>:<tag_name>` for each entry.
+#
+# arguments:
+# $1 - String - Image names as a comma seperated string (e.g., "img1,img2").
+# $2 - String - Tag names as a comma seperated string (e.g., "tag1,tag2").
+#
 function make_tags () {
   IMGS=$(echo "$1" | awk 'BEGIN{RS=","} {print}')
   TAGS=$(echo "$2" | awk 'BEGIN{RS=","} {print}')
@@ -39,11 +66,20 @@ function make_tags () {
   done
 }
 
-if [ "$1" = "arch" ]; then
-  get_arch "$2"
-elif [ "$1" == "archlist" ]; then
-  shift
-  arch_list "${@}" | head -c -1
-else
-  make_tags "$1" "$2"
-fi
+case "$1" in
+  arch)
+    shift
+    convert_arch "$2"
+    exit;;
+  archlist)
+    shift
+    arch_list "${@}" | head -c -1
+    exit;;
+  taglist)
+    shift
+    make_tags "$1" "$2"
+    exit;;
+  *)
+    make_tags "$1" "$2"
+    exit;;
+esac
