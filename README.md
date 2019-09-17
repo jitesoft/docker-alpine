@@ -13,7 +13,8 @@ It's important to be aware that this image have no `none-root` user created, run
 user could be a security issue. So if you derive from this image, creating a new user to run the services
 in the container is a good idea.
 
-Each image is built for the following architectures: `amd64/x86_64`, `arm64`, `armv7`, `ppc64le`, `s390x`, `x86`
+Each image is built for the following architectures: `amd64/x86_64`, `arm64`, `armv7`, `ppc64le`, `s390x`, `x86`.  
+_Observe though, quay.io does not currently support multi-arch images, so on quay, the `amd64/x86_64` image is the only one available._
 
 ## Tags
 

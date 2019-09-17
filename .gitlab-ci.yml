@@ -86,10 +86,16 @@ build:
   script:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
-    - TAG_STRING=$(./helper "jitesoft/alpine,${CI_REGISTRY_IMAGE}" "latest,${VERSION},${VERSION_SHORT}")
+    - TAGS="latest,${VERSION},${VERSION_SHORT}"
+    - TAG_STRING=$(./helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},docker.pkg.github.com/jitesoft/d/alpine" "${TAGS}")
     - ARCH_LIST=$(./helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
     - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
+    - docker pull ${CI_REGISTRY_IMAGE}:latest
+    - for tag in $(echo "${TAGS}" | sed "s/,/ /g") do
+        docker tag ${CI_REGISTRY_IMAGE}:latest quay.io/jitesoft/alpine:${tag}
+        docker push quay.io/jitesoft/alpine:${tag}
+      done
   tags:
     - jitesoft
     - buildx

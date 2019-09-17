@@ -17,16 +17,16 @@ function convert_arch () {
     x86_64 | amd64 | x64)
       echo "linux/amd64"
       exit;;
-    aarch64 | arm64)
+    aarch64 | arm64 | arm64v8)
       echo "linux/arm64"
       exit;;
     armv6)
       echo "linux/arm/v6"
       exit;;
-    armv7)
+    armv7 | arm32v7 | armhf)
       echo "linux/arm/v7"
       exit;;
-    ppc64le)
+    ppc64le | ppc64el)
       echo "linux/ppc64le"
       exit;;
     s390x)
