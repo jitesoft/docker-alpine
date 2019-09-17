@@ -10,7 +10,8 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.project.repo.issues="https://gitlab.com/jitesoft/dockerfiles/alpine/issues" \
       com.jitesoft.project.registry.uri="registry.gitlab.com/jitesoft/dockerfiles/alpine" \
       com.jitesoft.app.alpine.version="${VERSION}" \
-      com.jitesoft.app.alpine.arch="${TARGETPLATFORM}"
+      com.jitesoft.build.arch="${TARGETPLATFORM}"
+
 ENV LANG="C.UTF-8"
 
 ADD ./files/${TARGETPLATFORM}/alpine-minirootfs.tar.gz /
