@@ -84,7 +84,7 @@ build:
     - apk add --no-cache grep wget
     - chmod +x helper
   script:
-    - TAG_STRING=$(./helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},quay.io/jitesoft/alpine" "test,test2")
+    - TAG_STRING=$(./helper "jitesoft/alpine" "test,test2")
     - echo ${TAG_STRING}
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
@@ -93,6 +93,9 @@ build:
   tags:
     - jitesoft
     - buildx
+    - amd64
+    - arm7
+    - arm64
 
 scan:
   stage: scan
