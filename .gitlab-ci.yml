@@ -92,7 +92,7 @@ build:
     - echo "Building for following architectures ${ARCH_LIST}"
     - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
     - docker pull ${CI_REGISTRY_IMAGE}:latest
-    - for tag in $(echo "${TAGS}" | sed "s/,/ /g") do
+    - for tag in $(echo "${TAGS}" | sed "s/,/ /g"); do
         docker tag ${CI_REGISTRY_IMAGE}:latest quay.io/jitesoft/alpine:${tag}
         docker push quay.io/jitesoft/alpine:${tag}
         docker tag ${CI_REGISTRY_IMAGE}:latest docker.pkg.github.com/jitesoft/d/alpine:${tag}
