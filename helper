@@ -69,6 +69,15 @@ function make_tags () {
   done
 }
 
+function multi_tag () {
+  ORIGIN=$1
+  shift
+  for tag in "$@"; do
+    docker tag "${ORIGIN}" "${tag}"
+    echo "${ORIGIN} ==> ${tag}"
+  done
+}
+
 case "$1" in
   arch)
     shift
@@ -81,6 +90,10 @@ case "$1" in
   taglist)
     shift
     make_tags "$1" "$2"
+    exit;;
+  multitag)
+    shift
+    multi_tag "$@"
     exit;;
   *)
     make_tags "$1" "$2"

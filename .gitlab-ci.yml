@@ -97,8 +97,6 @@ build:
       do
         docker tag ${CI_REGISTRY_IMAGE}:latest quay.io/jitesoft/alpine:${tag}
         docker push quay.io/jitesoft/alpine:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:latest docker.pkg.github.com/jitesoft/d/alpine:${tag}
-        docker push docker.pkg.github.com/jitesoft/d/alpine:${tag}
       done
   tags:
     - jitesoft
