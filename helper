@@ -23,6 +23,12 @@ function get_arch () {
   esac
 }
 
+function arch_list () {
+  for arc in "$@"; do
+    echo -n "$(get_arch "${arc}"),"
+  done
+}
+
 function make_tags () {
   IMGS=$(echo "$1" | awk 'BEGIN{RS=","} {print}')
   TAGS=$(echo "$2" | awk 'BEGIN{RS=","} {print}')
@@ -35,6 +41,9 @@ function make_tags () {
 
 if [ "$1" = "arch" ]; then
   get_arch "$2"
+elif [ "$1" == "archlist" ]; then
+  shift
+  arch_list "${@}" | head -c -1
 else
   make_tags "$1" "$2"
 fi

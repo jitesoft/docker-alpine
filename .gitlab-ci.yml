@@ -87,8 +87,9 @@ build:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
     - TAG_STRING=$(./helper "jitesoft/alpine,${CI_REGISTRY_IMAGE}" "latest,${VERSION},${VERSION_SHORT}")
-    - docker buildx build --platform linux/arm,linux/arm64,linux/amd64,linux/386,linux/s39x,linux/ppc64le --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
-    - docker buildx build --platform linux/arm,linux/arm64,linux/amd64,linux/386,linux/s39x,linux/ppc64le --progress plain --push -t ${CI_REGISTRY_IMAGE}/buildbase:latest -f buildbase.dockerfile .
+    - ARCH_LIST=$(./helper archlist "${ARCHITECTURES}")
+    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
+    - docker buildx build --platform ${ARCH_LIST} --progress plain --push -t ${CI_REGISTRY_IMAGE}/buildbase:latest -f buildbase.dockerfile .
   tags:
     - jitesoft
     - buildx
