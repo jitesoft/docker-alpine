@@ -14,8 +14,7 @@ download:
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
-    - printf "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main\nhttps://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/community\n@edge https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/community\n@testing https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/testing" > /etc/apk/repositories
-    - apk add --no-cache grep wget curl@edge
+    - apk add --no-cache grep wget curl
   script:
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')

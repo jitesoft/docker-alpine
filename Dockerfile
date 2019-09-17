@@ -14,7 +14,7 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
 ENV LANG="C.UTF-8"
 
 ADD ./files/${TARGETPLATFORM}/alpine-minirootfs.tar.gz /
-RUN printf "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main\nhttps://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/community\n@edge https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/community\n@testing https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/testing" > /etc/apk/repositories \
+RUN printf "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main\nhttps://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/community" > /etc/apk/repositories \
  && apk add --no-cache --virtual .init-deps tzdata \
  && cp /usr/share/zoneinfo/UTC /etc/localtime \
  && echo "UTC" > /etc/timezone \
