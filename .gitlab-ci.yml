@@ -84,10 +84,10 @@ build:
     - apk add --no-cache grep wget
     - chmod +x helper
   script:
-    - TAG_STRING=$(./helper "jitesoft/alpine" "test,test2")
     - echo ${TAG_STRING}
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
+    - TAG_STRING=$(./helper "jitesoft/alpine,quay.io/jitesoft/alpine" "latest,${VERSION},${VERSION_SHORT}")
     - docker buildx build --platform linux/arm,linux/arm64,linux/amd64 --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
     - docker buildx build --platform linux/arm,linux/arm64,linux/amd64 --progress plain --push -t ${CI_REGISTRY_IMAGE}/buildbase:latest -f buildbase.dockerfile .
   tags:
