@@ -106,10 +106,3 @@ scan:
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:latest"
     GIT_STRATEGY: none
-
-scan:buildbase:
-  stage: scan
-  extends: .container_scanning
-  variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}/buildbase:latest"
-    GIT_STRATEGY: none

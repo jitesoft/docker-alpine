@@ -14,24 +14,24 @@
 #
 function convert_arch () {
   case "$1" in
-      x86_64)
-          echo "linux/amd64"
-          exit;;
-      aarch64)
-          echo "linux/arm64"
-          exit;;
-       armv7)
-          echo "linux/arm/v7"
-          exit;;
-      ppc64le)
-          echo "linux/ppc64le"
-          exit;;
-      s390x)
-          echo "linux/s390x"
-          exit;;
-      x86)
-          echo "linux/386"
-          exit;;
+    x86_64)
+      echo "linux/amd64"
+      exit;;
+    aarch64)
+      echo "linux/arm64"
+      exit;;
+    armv7)
+      echo "linux/arm/v7"
+      exit;;
+    ppc64le)
+      echo "linux/ppc64le"
+      exit;;
+    s390x)
+      echo "linux/s390x"
+      exit;;
+    x86)
+      echo "linux/386"
+      exit;;
   esac
 }
 
