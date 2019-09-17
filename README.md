@@ -13,24 +13,26 @@ It's important to be aware that this image have no `none-root` user created, run
 user could be a security issue. So if you derive from this image, creating a new user to run the services
 in the container is a good idea.
 
+Each image is built for the following architectures: `amd64/x86_64`, `arm64`, `armv7`, `ppc64le`, `s390x`, `x86`
 
 ## Tags
 
-Tags follows the releases of alpine, they are automatically built via GitLab CI, `latest` is the most recent version.
+Tags follows the releases of alpine, they are automatically built via GitLab CI, `latest` is the most recent version.  
+Be sure to check the tags for a full list of tags if you need a more specific version constraint.
 
 ### Docker Hub
 
-* `latest`, `3.10`
+* `latest`, `3.10`, `3.10.x`
 
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/alpine`
-  * `latest`, `3.10`
+  * `latest`, `3.10`, `3.10.x`
   
 ### Quay.io
 
 * `quay.io/jitesoft/alpine`
-  * `latest`, `3.10`
+  * `latest`, `3.10`, `3.10.x`
 
 Dockerfile and scripts can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/alpine) or [GitHub](https://github.com/jitesoft/docker-alpine).
 

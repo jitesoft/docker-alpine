@@ -11,6 +11,15 @@ function get_arch () {
        armv7)
           echo "linux/arm/v7"
           exit;;
+      ppc64le)
+          echo "linux/ppc64le"
+          exit;;
+      s390x)
+          echo "linux/s390x"
+          exit;;
+      x86)
+          echo "linux/386"
+          exit;;
   esac
 }
 
