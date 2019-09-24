@@ -51,7 +51,10 @@ verify:
     - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh -O helper
     - chmod +x helper
   script:
-    - gpg --import keys.out
+    - |
+      if [ -f keys.out ]; then
+        gpg --import keys.out
+      fi
     - gpg --list-keys ${GPG_KEY} || (gpg --keyserver pgp.mit.edu --recv-keys "${key}" || gpg --keyserver keyserver.pgp.com --recv-keys "${key}" || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}")
     - gpg --export > keys.out
     - |
@@ -100,15 +103,7 @@ build:
         docker tag ${CI_REGISTRY_IMAGE}:latest quay.io/jitesoft/alpine:${tag}
         docker push quay.io/jitesoft/alpine:${tag}
       done
-  tags:
-    - jitesoft
-    - buildx
-    - amd64
-    - arm7
-    - arm64
-    - x86
-    - ppc64le
-    - s390x
+  tags: [ jitesoft, buildx, amd64, arm7, arm64, x86, ppc64le, s390x ]
 
 scan:
   stage: scan
