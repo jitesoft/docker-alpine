@@ -55,7 +55,7 @@ verify:
       if [ -f keys.out ]; then
         gpg --import keys.out
       fi
-    - gpg --list-keys ${GPG_KEY} || (gpg --keyserver pgp.mit.edu --recv-keys "${key}" || gpg --keyserver keyserver.pgp.com --recv-keys "${key}" || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}")
+    - gpg --list-keys ${GPG_KEY} || (gpg --keyserver pgp.mit.edu --recv-keys "${GPG_KEY}" || gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_KEY}" || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}")
     - gpg --export > keys.out
     - |
       for ARCH in ${ARCHITECTURES};
