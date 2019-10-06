@@ -81,7 +81,7 @@ verify:
 
 build:
   stage: build
-  image: registry.gitlab.com/jitesoft/dockerfiles/docker/misc:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   dependencies:
     - verify
   script:
