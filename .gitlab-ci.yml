@@ -99,9 +99,10 @@ build:
         docker tag ${CI_REGISTRY_IMAGE}:latest quay.io/jitesoft/alpine:${tag}
         docker push quay.io/jitesoft/alpine:${tag}
       done
-  tags: [ jitesoft, buildx, amd64, arm7, arm64, x86, ppc64le, s390x ]
+  tags: [ jitesoft, buildx, protected ]
 
 scan:
+  tags: [ protected, jitesoft, docker ]
   stage: scan
   extends: .container_scanning
   variables:
