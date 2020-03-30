@@ -91,7 +91,7 @@ build:
     - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},quay.io/jitesoft/alpine" "${TAGS}")
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
-    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT="${VERSION_SHORT}" --build-arg BUILD_TIME="$(date --rfc-3339=second)" --build-arg SHORT_SHA="${CI_COMMIT_SHORT_SHA}" --build-arg VERSION="${VERSION}" .
+    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
   tags: [ jitesoft, buildx, protected ]
 
 scan:

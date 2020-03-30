@@ -16,15 +16,7 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.project.registry.uri="registry.gitlab.com/jitesoft/dockerfiles/alpine" \
       com.jitesoft.app.alpine.version="${VERSION}" \
       com.jitesoft.build.arch="${TARGETARCH}" \
-      com.jitesoft.build.platform="${TARGETPLATFORM}" \
-      # Open Container labels.
-      org.opencontainers.image.created="${BUILD_TIME}" \
-      org.opencontainers.image.authors="Johannes Tegnér <johannes@jitesoft.com>" \
-      org.opencontainers.image.url="https://gitlab.com/jitesoft/dockerfiles/alpine" \
-      org.opencontainers.image.source="https://gitlab.com/jitesoft/dockerfiles/alpine" \
-      org.opencontainers.image.version="${VERSION}" \
-      org.opencontainers.image.vendor="Jitesoft" \
-      org.opencontainers.image.revision="${SHORT_SHA}"
+      com.jitesoft.build.platform="${TARGETPLATFORM}"
 
 
 
