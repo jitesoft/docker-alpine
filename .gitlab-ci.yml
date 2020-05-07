@@ -13,7 +13,7 @@ variables:
 download:
   except:
     variables:
-      - $CI_COMMIT_MESSAGE = CONTAINER_SCAN
+      - $ONLY == "CONTAINER_SCAN"
   only:
     changes:
       - Dockerfile
