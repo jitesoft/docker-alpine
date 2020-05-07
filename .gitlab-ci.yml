@@ -45,6 +45,9 @@ download:
     expire_in: 1 day
 
 verify:
+  except:
+    variables:
+      - $ONLY == "CONTAINER_SCAN"
   stage: verify
   dependencies:
     - download
@@ -87,6 +90,9 @@ verify:
     expire_in: 1 day
 
 build:
+  except:
+    variables:
+      - $ONLY == "CONTAINER_SCAN"
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   dependencies:
