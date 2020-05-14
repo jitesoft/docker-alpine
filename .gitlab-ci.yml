@@ -100,10 +100,11 @@ build:
   dependencies:
     - verify
   script:
+    # quay.io/jitesoft/alpine
     - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
     - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
     - TAGS="latest,${VERSION},${VERSION_SHORT}"
-    - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},quay.io/jitesoft/alpine" "${TAGS}")
+    - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE}" "${TAGS}")
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
     - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
