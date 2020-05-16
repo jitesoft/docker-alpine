@@ -10,12 +10,11 @@ stages:
 variables:
   ARCHITECTURES: "x86_64 armv7 aarch64 ppc64le s390x x86"
 
-
-
 download:
-  except:
-    variables:
-      - $ONLY == "CONTAINER_SCAN"
+  rules:
+    - if: '$ONLY == "CONTAINER_SCAN"'
+      when: never
+    - when: on_success
   only:
     changes:
       - Dockerfile
@@ -48,9 +47,10 @@ download:
 
 
 verify:
-  except:
-    variables:
-      - $ONLY == "CONTAINER_SCAN"
+  rules:
+    - if: '$ONLY == "CONTAINER_SCAN"'
+      when: never
+    - when: on_success
   stage: verify
   dependencies:
     - download
@@ -93,9 +93,10 @@ verify:
     expire_in: 1 day
 
 build:
-  except:
-    variables:
-      - $ONLY == "CONTAINER_SCAN"
+  rules:
+    - if: '$ONLY == "CONTAINER_SCAN"'
+      when: never
+    - when: on_success
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   dependencies:
