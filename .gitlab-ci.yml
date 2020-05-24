@@ -15,10 +15,6 @@ download:
     - if: '$ONLY == "CONTAINER_SCAN"'
       when: never
     - when: on_success
-  only:
-    changes:
-      - Dockerfile
-      - .gitlab-ci.yml
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
