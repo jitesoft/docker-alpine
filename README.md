@@ -23,17 +23,17 @@ Be sure to check the tags for a full list of tags if you need a more specific ve
 
 ### Docker Hub
 
-* `latest`, `3.10`, `3.10.x`
+* `latest`, `3.12`, `3.12.x`
 
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/alpine`
-  * `latest`, `3.10`, `3.10.x`
+  * `latest`, `3.12`, `3.12.x`
   
 ### Quay.io
 
 * `quay.io/jitesoft/alpine`
-  * `latest`, `3.10`, `3.10.x`
+  * `latest`, `3.12`, `3.12.x`
 
 Dockerfile and scripts can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/alpine) or [GitHub](https://github.com/jitesoft/docker-alpine).
 

@@ -9,7 +9,6 @@ ARG SHORT_SHA
 LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       maintainer.org="Jitesoft" \
       maintainer.org.uri="https://jitesoft.com" \
-      # Jitesoft labels.
       com.jitesoft.project.repo.type="git" \
       com.jitesoft.project.repo.uri="https://gitlab.com/jitesoft/dockerfiles/alpine" \
       com.jitesoft.project.repo.issues="https://gitlab.com/jitesoft/dockerfiles/alpine/issues" \
@@ -18,13 +17,11 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.build.arch="${TARGETARCH}" \
       com.jitesoft.build.platform="${TARGETPLATFORM}"
 
-
-
 ENV LANG="C.UTF-8"
 
 ADD ./files/${TARGETPLATFORM}/alpine-minirootfs.tar.gz /
 # Why so many apk repositories?
-# Umu is the main repository used. The halifax repository is a fallback.
+# halifax is the main repository used. The Umu repository is a fallback.
 # Both of the repositories have 20gb bandwidth on their connections, so it should
 # be good enough for lot's a updates!
 # All the @edge prefixed are pinned for edge, check: https://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management#Repository_pinning for more information.
