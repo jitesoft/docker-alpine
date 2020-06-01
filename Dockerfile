@@ -26,10 +26,10 @@ ADD ./files/${TARGETPLATFORM}/alpine-minirootfs.tar.gz /
 # be good enough for lot's a updates!
 # All the @edge prefixed are pinned for edge, check: https://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management#Repository_pinning for more information.
 RUN echo "ipv6" >> /etc/modules; \
-    echo "https://ftp.halifax.rwth-aachen.de/alpine/v${VERSION_SHORT}/main" >> /etc/apk/repositories; \
+    echo "https://ftp.halifax.rwth-aachen.de/alpine/v${VERSION_SHORT}/main" > /etc/apk/repositories; \
     echo "https://ftp.halifax.rwth-aachen.de/alpine/v${VERSION_SHORT}/community" >> /etc/apk/repositories; \
     echo "# Fallback repositories." >> /etc/apk/repositories; \
-    echo "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main" > /etc/apk/repositories; \
+    echo "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main" >> /etc/apk/repositories; \
     echo "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/community" >> /etc/apk/repositories; \
     echo "# Edge repositories, pinned." >> /etc/apk/repositories; \
     echo "@edge https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/main" >> /etc/apk/repositories; \
