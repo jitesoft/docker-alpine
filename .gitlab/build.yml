@@ -9,6 +9,12 @@ scan:
     - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}:$(cat version.txt)"
   variables:
     GIT_STRATEGY: none
+  rules:
+    - if: "$SCAN"
+      when: always
+    - if: "$ALPINE_VERSION"
+      when: always
+    - when: never
   cache:
     paths:
       - version.txt
