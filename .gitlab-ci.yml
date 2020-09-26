@@ -41,20 +41,3 @@ check-version:
       else
         curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[SCAN]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       fi
-
-create-cache:
-  variables:
-    GIT_STRATEGY: none
-  stage: create-cache
-  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
-  rules:
-    - if: '$CACHE_CREATE'
-      when: always
-    - when: never
-  script:
-    - echo "${VERSION}" > version.txt
-  cache:
-    paths:
-      - version.txt
-    key: alpine-version
-    policy: pull-push
