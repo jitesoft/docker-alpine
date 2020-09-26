@@ -14,8 +14,6 @@ variables:
 
 check-version:
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
-      when: always
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: always
     - if: '$CI_PIPELINE_SOURCE == "web"'
