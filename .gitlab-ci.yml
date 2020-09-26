@@ -1,129 +1,60 @@
 include:
-  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/Scan/trivy.yml
+  - local: /.gitlab/build.yml
+  - file: /Scan/trivy.yml
+    project: jitesoft/gitlab-ci-lib
 
 stages:
+  - check
   - download
   - verify
   - build
   - scan
+  - create-cache
 
 variables:
   ARCHITECTURES: "x86_64 armv7 aarch64 ppc64le s390x x86"
 
-download:
+check-versions:
   rules:
-    - if: '$ONLY == "CONTAINER_SCAN"'
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
       when: never
-    - when: on_success
-  stage: download
-  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
-  before_script:
-    - apk add --no-cache grep wget curl
-  script:
-    - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
-    - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
-    - mkdir -p files/tmp
-    - rm -rf files/*
-    - cd files
-    - |
-      for ARCH in ${ARCHITECTURES};
-      do
-          mkdir -p ${ARCH}
-          cd ${ARCH}
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz"
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256"
-          curl -OsS "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/releases/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc"
-         cd ..
-      done
-      cd ..
-  artifacts:
-    paths:
-      - files/*
-    expire_in: 1 day
-
-
-verify:
-  rules:
-    - if: '$ONLY == "CONTAINER_SCAN"'
-      when: never
-    - when: on_success
-  stage: verify
-  dependencies:
-    - download
-  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
-  variables:
-    GPG_KEY: "0482D84022F52DF1C4E7CD43293ACD0907D9495A"
-  before_script:
-    - apk add --no-cache gnupg grep wget
-    - echo "${GPG_KEY}" > gpgkeys.txt
-    - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
-    - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh -O helper
-    - chmod +x helper
-  script:
-    - |
-      if [ -f keys.out ]; then
-        gpg --import keys.out
-      fi
-    - gpg --list-keys ${GPG_KEY} || (gpg --keyserver pgp.mit.edu --recv-keys "${GPG_KEY}" || gpg --keyserver keyserver.pgp.com --recv-keys "${GPG_KEY}" || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${GPG_KEY}")
-    - gpg --export > keys.out
-    - |
-      for ARCH in ${ARCHITECTURES};
-      do
-          cd files/${ARCH}
-          gpg --verify alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.asc alpine-minirootfs-${VERSION}-${ARCH}.tar.gz
-          grep " alpine-minirootfs-${VERSION}-${ARCH}.tar.gz\$" alpine-minirootfs-${VERSION}-${ARCH}.tar.gz.sha256 | sha256sum -c -
-          cd ../..
-          DOCKER_ARCH=$(./helper arch "${ARCH}")
-          echo "Creating directory for ${DOCKER_ARCH}"
-          mkdir -p "files/${DOCKER_ARCH}"
-          mv files/${ARCH}/alpine-minirootfs-${VERSION}-${ARCH}.tar.gz "files/${DOCKER_ARCH}/alpine-minirootfs.tar.gz"
-          rm -rf files/${ARCH}
-      done
+  stage: check
   cache:
-    key: alpine.gpg.keyring
-    paths:
-      - keys.out
-  artifacts:
-    paths:
-      - files/*
-    expire_in: 1 day
-
-build:
-  rules:
-    - if: '$ONLY == "CONTAINER_SCAN"'
-      when: never
-    - when: on_success
-  stage: build
-  image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
-  dependencies:
-    - verify
-  script:
-    # quay.io/jitesoft/alpine
-    - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
-    - echo "${VERSION}" > version.txt
-    - VERSION_SHORT=$(echo ${VERSION} | grep -oP '(\d+[.]\d+)')
-    - TAGS="latest,${VERSION},${VERSION_SHORT}"
-    - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/alpine" "${TAGS}")
-    - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
-    - echo "Building for following architectures ${ARCH_LIST}"
-    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${VERSION} .
-  tags: [ jitesoft, buildx, protected ]
-  cache:
-    paths:
-      - version.txt
-    policy: push
-    key: alpine.version
-
-scan:
-  tags: [ protected, jitesoft ]
-  stage: scan
-  extends: .container_scanning
-  before_script:
-    - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}:$(cat version.txt)"
-  variables:
-    GIT_STRATEGY: none
-  cache:
+    key: alpine-version
     paths:
       - version.txt
     policy: pull
-    key: alpine.version
+  script:
+    - apk add --no-cache wget grep
+    - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
+    - touch version.txt
+    - |
+      if [ "$(cat version.txt)" != "${VERSION}"; then
+        echo "Should build new container."
+        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+      else
+        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[SCAN]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+      fi
+
+create-cache:
+  variables:
+    GIT_STRATEGY: none
+  stage: create-cache
+  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
+  rules:
+    - if: '$CACHE_CREATE'
+      when: always
+    - when: never
+  script:
+    - echo "${VERSION}" > version.txt
+  cache:
+    paths:
+      - version.txt
+    key: alpine-version
+    policy: pull-push
