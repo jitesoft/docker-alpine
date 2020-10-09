@@ -28,8 +28,6 @@ The `jitesoft/alpine` images should be possible to find at the following registr
 * `ghcr.io/jitesoft/alpine`
 * `quay.io/jitesoft/alpine`
 
-_Observe: Pulling from ghcr.io is currently not possible, as multi-arch images automatically are made private as of now._
-
 _Observe: Push to quay.io currently disabled and images might be old due to quay not fully supporting multi-arch images._
 
 #### Supported/actively built tags:
