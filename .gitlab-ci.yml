@@ -150,7 +150,7 @@ build:
     - echo "${ALPINE_VERSION}" > version.txt
     - VERSION_SHORT=$(echo ${ALPINE_VERSION} | grep -oP '(\d+[.]\d+)')
     - TAGS="latest,${ALPINE_VERSION},${VERSION_SHORT}"
-    - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/alpine" "${TAGS}")
+    - TAG_STRING=$(helper "quay.io/jitesoft/alpine,jitesoft/alpine,${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/alpine" "${TAGS}")
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
     - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg VERSION=${ALPINE_VERSION} .
