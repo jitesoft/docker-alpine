@@ -42,8 +42,6 @@ Dockerfile and scripts can be found at [GitLab](https://gitlab.com/jitesoft/dock
 
 This image follows the [Jitesoft image label specification 1.0.0](https://gitlab.com/snippets/1866155).
 
----
-
 ### Sponsors
 
 Sponsoring is vital for the further development and maintaining of open source projects.  
