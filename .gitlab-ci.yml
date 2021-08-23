@@ -10,7 +10,7 @@ stages:
   - scan
 
 variables:
-  ARCHITECTURES: "x86_64 armv7 aarch64 s390x x86"
+  ARCHITECTURES: "x86_64 armv7 aarch64 ppc64le s390x x86"
 
 check-version:
   rules:
