@@ -13,6 +13,12 @@ variables:
   ARCHITECTURES: "x86_64 armv7 aarch64 ppc64le s390x x86"
 
 check-version:
+  parallel:
+    matrix:
+      - { MINOR: "11", TAG: "3.11" }
+      - { MINOR: "12", TAG: "3.12" }
+      - { MINOR: "13", TAG: "3.13" }
+      - { MINOR: "14", TAG: "3.14,latest" }
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $CHECK'
       when: always
@@ -22,18 +28,18 @@ check-version:
       when: never
   stage: check
   cache:
-    key: alpine-version
+    key: alpine-version-${MINOR}
     paths:
-      - version.txt
+      - version-${MINOR}.txt
     policy: pull
   script:
     - apk add --no-cache wget grep curl
-    - VERSION=$(wget -qO- https://alpinelinux.org/downloads/ | grep -oP "(?<=<strong>)(([0-9]{0,3}(\.?)){3})" | awk 'NR==1{print $1}')
-    - touch version.txt
+    - VERSION=$(wget -qO- https://www.alpinelinux.org/releases/ | grep -oP "(3\.${MINOR}\.[0-9]{1,3})" | awk 'NR==1{print $1}')
+    - touch version-${MINOR}.txt
     - |
-      if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version.txt)" != "${VERSION}" ]; then
+      if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version-${MINOR}.txt)" != "${VERSION}" ]; then
         echo "Should build new container."
-        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[ALPINE_VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[MINOR]=${MINOR}" -F "variables[ALPINE_VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       fi
 
 
@@ -156,9 +162,9 @@ build:
   tags: [ jitesoft, buildx, protected ]
   cache:
     paths:
-      - version.txt
+      - version-${MINOR}.txt
     policy: push
-    key: alpine-version
+    key: alpine-version-${MINOR}
 
 
 
