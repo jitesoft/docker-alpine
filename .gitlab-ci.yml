@@ -15,10 +15,10 @@ variables:
 check-version:
   parallel:
     matrix:
-      - { MINOR: "11", TAG: "3.11" }
-      - { MINOR: "12", TAG: "3.12" }
-      - { MINOR: "13", TAG: "3.13" }
-      - { MINOR: "14", TAG: "3.14,latest" }
+      - { MINOR: "11", BASE_TAGS: "3.11" }
+      - { MINOR: "12", BASE_TAGS: "3.12" }
+      - { MINOR: "13", BASE_TAGS: "3.13" }
+      - { MINOR: "14", BASE_TAGS: "3.14,latest" }
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $CHECK'
       when: always
@@ -30,7 +30,7 @@ check-version:
   cache:
     key: alpine-version-${MINOR}
     paths:
-      - version-${MINOR}.txt
+      - version.txt
     policy: pull
   script:
     - apk add --no-cache wget grep curl
@@ -39,32 +39,34 @@ check-version:
     - |
       if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version-${MINOR}.txt)" != "${VERSION}" ]; then
         echo "Should build new container."
-        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[MINOR]=${MINOR}" -F "variables[ALPINE_VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[BASE_TAGS]=${BASE_TAGS}" -F "variables[MINOR]=${MINOR}" -F "variables[ALPINE_VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+      else
+        echo "Should only scan."
+        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[BASE_TAGS]=${BASE_TAGS}" -F "variables[MINOR]=${MINOR}" -F "variables[ALPINE_VERSION]=${VERSION}" -F "variables[SCAN]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       fi
-
 
 scan:
   tags: [ protected, jitesoft ]
   extends: .scan.container.trivy.remote
   before_script:
-    - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}:$(cat version.txt)"
+    - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}:${ALPINE_VERSION}"
   variables:
     GIT_STRATEGY: none
   rules:
     - if: "$SCAN"
       when: always
-    - if: "$ALPINE_VERSION"
+    - if: "$BUILD"
       when: always
     - when: never
   cache:
     paths:
       - version.txt
     policy: pull
-    key: alpine-version
+    key: alpine-version-${MINOR}
 
 download:
   rules:
-    - if: "$ALPINE_VERSION"
+    - if: "$BUILD"
       when: always
     - when: never
   stage: download
@@ -100,8 +102,8 @@ verify:
     - job: download
       artifacts: true
   rules:
-    - if: "$ALPINE_VERSION"
-      when: always
+    - if: "$BUILD"
+      when: on_success
     - when: never
   stage: verify
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
@@ -145,15 +147,15 @@ build:
   needs:
     - verify
   rules:
-    - if: "$ALPINE_VERSION"
-      when: always
+    - if: "$BUILD"
+      when: on_success
     - when: never
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
     - echo "${ALPINE_VERSION}" > version.txt
     - VERSION_SHORT=$(echo ${ALPINE_VERSION} | grep -oP '(\d+[.]\d+)')
-    - TAGS="latest,${ALPINE_VERSION},${VERSION_SHORT}"
+    - TAGS="${BASE_TAGS},${ALPINE_VERSION}"
     - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/alpine" "${TAGS}")
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
@@ -162,7 +164,7 @@ build:
   tags: [ jitesoft, buildx, protected ]
   cache:
     paths:
-      - version-${MINOR}.txt
+      - version.txt
     policy: push
     key: alpine-version-${MINOR}
 
