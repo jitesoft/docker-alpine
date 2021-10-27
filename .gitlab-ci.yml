@@ -1,7 +1,9 @@
 include:
   - file: /Scan/trivy.yml
     project: jitesoft/gitlab-ci-lib
-
+  - file: /OCI/sign.yml
+    project: jitesoft/gitlab-ci-lib
+  
 stages:
   - check
   - download
@@ -165,5 +167,15 @@ build:
     policy: push
     key: alpine-version-${MINOR}
 
-
-
+sign:
+  extends: .sign
+  tags: [ jitesoft, protected, buildx ]
+  stage: sign
+  variables:
+    COSIGN_ANNOTATIONS: "-a sig=jitesoft-bot"
+    SIGN_TAGS: "${BASE_TAGS},${ALPINE_VERSION}"
+    SIGN_IMAGES: "jitesoft/alpine,${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/alpine"
+  rules:
+    - if: "$BUILD"
+      when: on_success
+    - when: never
