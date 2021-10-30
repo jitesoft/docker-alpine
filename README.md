@@ -38,6 +38,10 @@ Dockerfile and scripts can be found at [GitLab](https://gitlab.com/jitesoft/dock
 
 This image follows the [Jitesoft image label specification 1.0.0](https://gitlab.com/snippets/1866155).
 
+### Signature
+
+Cosign public key for this image can be found at [https://jitesoft.com/cosign.pub](https://jitesoft.com/cosign.pub).
+
 ### Sponsors
 
 Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
