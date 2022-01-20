@@ -153,6 +153,7 @@ build:
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
+    - apk add --no-cache coreutils
     - echo "${ALPINE_VERSION}" > version.txt
     - VERSION_SHORT=$(echo ${ALPINE_VERSION} | grep -oP '(\d+[.]\d+)')
     - TAGS="${BASE_TAGS},${ALPINE_VERSION}"
