@@ -161,7 +161,7 @@ build:
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
     - BUILD_TIME=$(date --rfc-3339=seconds)
-    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg BUILD_TIME=${BUILD_TIME} --build-arg VERSION=${ALPINE_VERSION} .
+    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg BUILD_TIME="${BUILD_TIME}" --build-arg VERSION=${ALPINE_VERSION} .
     - echo "${ALPINE_VERSION}" > version.txt
   tags: [ jitesoft, buildx, protected ]
   cache:
