@@ -153,14 +153,13 @@ build:
   stage: build
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   script:
-    - apk add --no-cache coreutils
     - echo "${ALPINE_VERSION}" > version.txt
     - VERSION_SHORT=$(echo ${ALPINE_VERSION} | grep -oP '(\d+[.]\d+)')
     - TAGS="${BASE_TAGS},${ALPINE_VERSION}"
     - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/alpine" "${TAGS}")
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
-    - BUILD_TIME=$(date --rfc-3339=seconds)
+    - BUILD_TIME=$(date -Iseconds)
     - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAG_STRING} --build-arg VERSION_SHORT=${VERSION_SHORT} --build-arg BUILD_TIME="${BUILD_TIME}" --build-arg VERSION=${ALPINE_VERSION} .
     - echo "${ALPINE_VERSION}" > version.txt
   tags: [ jitesoft, buildx, protected ]
