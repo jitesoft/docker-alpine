@@ -22,7 +22,8 @@ check-version:
       - { MINOR: "11", BASE_TAGS: "3.11" }
       - { MINOR: "12", BASE_TAGS: "3.12" }
       - { MINOR: "13", BASE_TAGS: "3.13" }
-      - { MINOR: "14", BASE_TAGS: "3.14,latest" }
+      - { MINOR: "14", BASE_TAGS: "3.14" }
+      - { MINOR: "15", BASE_TAGS: "3.15,latest" }
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $CHECK'
       when: always
