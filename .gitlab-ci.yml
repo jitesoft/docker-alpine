@@ -38,9 +38,9 @@ check-version:
     policy: pull
   script:
     - VERSION=$(wget -qO- https://www.alpinelinux.org/releases/ | grep -oP "(3\.${MINOR}\.[0-9]{1,3})" | awk 'NR==1{print $1}')
-    - touch version-${MINOR}.txt
+    - touch version.txt
     - |
-      if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version-${MINOR}.txt)" != "${VERSION}" ]; then
+      if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version.txt)" != "${VERSION}" ]; then
         echo "Should build new container."
         curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[BASE_TAGS]=${BASE_TAGS}" -F "variables[MINOR]=${MINOR}" -F "variables[ALPINE_VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       else
