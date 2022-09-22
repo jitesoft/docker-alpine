@@ -156,7 +156,7 @@ build:
     - echo "${ALPINE_VERSION}" > version.txt
     - VERSION_SHORT=$(echo ${ALPINE_VERSION} | grep -oP '(\d+[.]\d+)')
     - TAGS="${BASE_TAGS},${ALPINE_VERSION}"
-    - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/alpine" "${TAGS}")
+    - TAG_STRING=$(helper "jitesoft/alpine,${CI_REGISTRY_IMAGE},ghcr.io/jitesoft/alpine,quay.io/jitesoft/alpine" "${TAGS}")
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
     - echo "Building for following architectures ${ARCH_LIST}"
     - BUILD_TIME=$(date -Iseconds)
