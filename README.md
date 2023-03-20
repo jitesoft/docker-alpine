@@ -16,7 +16,7 @@ Each image is built for the following architectures: `amd64/x86_64`, `arm64`, `a
 
 ## Tags
 
-Tags follows the releases of alpine, they are automatically built via GitLab CI, `latest` is the most recent version.  
+Tags follow the releases of alpine, they are automatically built via GitLab CI, `latest` is the most recent version.  
 Be sure to check the tags for a full list of tags if you need a more specific version constraint.
 
 ### Registries
@@ -27,8 +27,6 @@ The `jitesoft/alpine` images should be possible to find at the following registr
 * `registry.gitlab.com/jitesoft/dockerfiles/alpine`
 * `ghcr.io/jitesoft/alpine`
 * `quay.io/jitesoft/alpine`
-
-_Observe: Push to quay.io currently disabled and images might be old due to quay not fully supporting multi-arch images._
 
 ### Dockerfile
 
@@ -46,8 +44,9 @@ Cosign public key for this image can be found at [https://jitesoft.com/cosign.pu
 
 Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
 
-[![Fosshost Logo](https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshostx128.png)](https://fosshost.org)
-[![Aarch64 logo](https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/aarch64x128.png)](https://aarch64.com)
+<a href="https://osuosl.org/" target="_blank" title="Oregon State University - Open Source Lab">
+    <img src="https://jitesoft.com/images/oslx128.webp" alt="Oregon State University - Open Source Lab">
+</a>
 
 _The companies above are not affiliated with Jitesoft or any Jitesoft Projects directly._
 
