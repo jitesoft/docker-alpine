@@ -22,6 +22,8 @@ readme-update:
     name: chko/docker-pushrm
     entrypoint: ["/bin/sh", "-c", "/docker-pushrm"]
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $README_UPDATE'
+      when: always
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       changes:
         - README.md
@@ -30,8 +32,8 @@ readme-update:
   tags: [ buildx, protected ]
   parallel:
     matrix:
-      - { PUSHRM_TARGET: "docker.io/jitesoft/alpine", PUSHRM_FILE: "README.md" }
-      - { PUSHRM_TARGET: "quay.io/jitesoft/alpine", PUSHRM_FILE: "README.md" }
+      - { PUSHRM_TARGET: "docker.io/jitesoft/alpine", PUSHRM_FILE: "$CI_PROJECT_DIR/README.md" }
+      - { PUSHRM_TARGET: "quay.io/jitesoft/alpine", PUSHRM_FILE: "$CI_PROJECT_DIR/README.md" }
   script:
     - "/bin/true"
 
