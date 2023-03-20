@@ -20,8 +20,7 @@ readme-update:
   stage: readme
   image:
     name: chko/docker-pushrm
-    entrypoint:
-      - ["/bin/sh", "-c", "/docker-pushrm"]
+    entrypoint: ["/bin/sh", "-c", "/docker-pushrm"]
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       changes:
