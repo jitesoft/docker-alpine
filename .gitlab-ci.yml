@@ -5,6 +5,7 @@ include:
     project: jitesoft/gitlab-ci-lib
 
 stages:
+  - readme
   - check
   - download
   - verify
@@ -14,6 +15,26 @@ stages:
 
 variables:
   ARCHITECTURES: "x86_64 armv7 aarch64 ppc64le s390x x86"
+
+readme-update:
+  stage: readme
+  image:
+    name: chko/docker-pushrm
+    entrypoint:
+      - ["/bin/sh", "-c", "/docker-pushrm"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      changes:
+        - README.md
+      when: always
+    - when: never
+  tags: [ buildx, protected ]
+  parallel:
+    matrix:
+      - { PUSHRM_TARGET: "docker.io/jitesoft/alpine", PUSHRM_FILE: "README.md" }
+      - { PUSHRM_TARGET: "quay.io/jitesoft/alpine", PUSHRM_FILE: "README.md" }
+  script:
+    - "/bin/true"
 
 check-version:
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
@@ -182,3 +203,4 @@ sign:
     - if: "$BUILD"
       when: on_success
     - when: never
+
