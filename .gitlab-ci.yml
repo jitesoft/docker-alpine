@@ -19,28 +19,6 @@ stages:
 variables:
   ARCHITECTURES: "x86_64 armv7 aarch64 ppc64le s390x x86"
 
-readme-update:
-  stage: check
-  image:
-    name: chko/docker-pushrm
-    entrypoint: ["/bin/sh", "-c", "/docker-pushrm"]
-  rules:
-    - changes:
-        paths:
-          - README.md
-      when: always
-    - if: "$SCAN"
-      when: never
-    - if: "$BUILD"
-      when: never
-  tags: [ buildx, protected ]
-  parallel:
-    matrix:
-      - { PUSHRM_TARGET: "docker.io/jitesoft/alpine", PUSHRM_FILE: "$CI_PROJECT_DIR/README.md" }
-      - { PUSHRM_TARGET: "quay.io/jitesoft/alpine", PUSHRM_FILE: "$CI_PROJECT_DIR/README.md" }
-  script:
-    - "/bin/true"
-
 check-version:
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   parallel:
