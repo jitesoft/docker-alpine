@@ -1,3 +1,7 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
 include:
   - file: /Scan/trivy.yml
     project: jitesoft/gitlab-ci-lib
@@ -21,10 +25,14 @@ readme-update:
     name: chko/docker-pushrm
     entrypoint: ["/bin/sh", "-c", "/docker-pushrm"]
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      changes:
-        - README.md
+    - changes:
+        paths:
+          - README.md
       when: always
+    - if: "$SCAN"
+      when: never
+    - if: "$BUILD"
+      when: never
   tags: [ buildx, protected ]
   parallel:
     matrix:
