@@ -5,7 +5,6 @@ include:
     project: jitesoft/gitlab-ci-lib
 
 stages:
-  - readme
   - check
   - download
   - verify
@@ -17,18 +16,15 @@ variables:
   ARCHITECTURES: "x86_64 armv7 aarch64 ppc64le s390x x86"
 
 readme-update:
-  stage: readme
+  stage: check
   image:
     name: chko/docker-pushrm
     entrypoint: ["/bin/sh", "-c", "/docker-pushrm"]
   rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $README_UPDATE'
-      when: always
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       changes:
         - README.md
       when: always
-    - when: never
   tags: [ buildx, protected ]
   parallel:
     matrix:
