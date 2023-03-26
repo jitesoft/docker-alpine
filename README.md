@@ -32,14 +32,14 @@ The `jitesoft/alpine` images should be possible to find at the following registr
 ### Dockerfile
 
 Dockerfile and scripts can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/alpine) or [GitHub](https://github.com/jitesoft/docker-alpine).
-
+  
 ### Image labels
 
 This image follows the [Jitesoft image label specification 1.0.0](https://gitlab.com/snippets/1866155).
 
-### Signature
+## Licenses
 
-Cosign public key for this image can be found at [https://jitesoft.com/cosign.pub](https://jitesoft.com/cosign.pub).
+Files in this repository are released under the MIT license.  
 
 ### Sponsors
 
