@@ -37,7 +37,7 @@ Dockerfile and scripts can be found at [GitLab](https://gitlab.com/jitesoft/dock
 
 This image follows the [Jitesoft image label specification 1.0.0](https://gitlab.com/snippets/1866155).
 
-## Licenses
+### Licenses
 
 Files in this repository are released under the MIT license.  
 
