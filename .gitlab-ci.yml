@@ -5,6 +5,8 @@ workflow:
 include:
   - file: /Scan/trivy.yml
     project: jitesoft/gitlab-ci-lib
+  - file: /OCI/push-readme.yml
+    project: jitesoft/gitlab-ci-lib
 
 stages:
   - check
@@ -15,6 +17,15 @@ stages:
 
 variables:
   ARCHITECTURES: "x86_64 armv7 aarch64 ppc64le s390x x86"
+
+update-readme:
+  stage: check
+  extends: .readme-push
+  parallel:
+    matrix:
+      - { PUSHRM_TARGET: "quay.io/jitesoft/alpine" }
+      - { PUSHRM_TARGET: "docker.io/jitesoft/alpine" }
+  tags: [ buildx, protected ]
 
 check-version:
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
