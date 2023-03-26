@@ -9,6 +9,7 @@ include:
     project: jitesoft/gitlab-ci-lib
 
 stages:
+  - readme
   - check
   - download
   - verify
