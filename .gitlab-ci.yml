@@ -20,12 +20,12 @@ variables:
 
 update-readme:
   stage: check
-  extends: .readme-push
+  extends: .readme-check
   parallel:
     matrix:
       - { PUSHRM_TARGET: "quay.io/jitesoft/alpine" }
       - { PUSHRM_TARGET: "docker.io/jitesoft/alpine" }
-  tags: [ buildx, protected ]
+  tags: [ protected ]
 
 check-version:
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
