@@ -44,9 +44,9 @@ RUN echo "ipv6" >> /etc/modules; \
     echo "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/main" >> /etc/apk/repositories; \
     echo "https://ftp.acc.umu.se/mirror/alpinelinux.org/v${VERSION_SHORT}/community" >> /etc/apk/repositories; \
     echo "# Edge repositories, pinned." >> /etc/apk/repositories; \
-    echo "@edge https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/main" >> /etc/apk/repositories; \
-    echo "@edgecommunity https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/community" >> /etc/apk/repositories; \
-    echo "@edgetesting https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/testing" >> /etc/apk/repositories \
+    echo "# @edge https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/main" >> /etc/apk/repositories; \
+    echo "# @edgecommunity https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/community" >> /etc/apk/repositories; \
+    echo "# @edgetesting https://ftp.acc.umu.se/mirror/alpinelinux.org/edge/testing" >> /etc/apk/repositories \
  && apk add --no-cache --virtual .init-deps tzdata \
  && cp /usr/share/zoneinfo/UTC /etc/localtime \
  && echo "UTC" > /etc/timezone \
