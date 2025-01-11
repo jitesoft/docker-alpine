@@ -32,8 +32,6 @@ check-version:
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   parallel:
     matrix:
-      - { MINOR: "16", BASE_TAGS: "3.16" }
-      - { MINOR: "17", BASE_TAGS: "3.17" }
       - { MINOR: "18", BASE_TAGS: "3.18" }
       - { MINOR: "19", BASE_TAGS: "3.19" }
       - { MINOR: "20", BASE_TAGS: "3.20" }
